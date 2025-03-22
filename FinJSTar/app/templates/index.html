@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Eval CTF</title>
+</head>
+<body>
+    <h2>Выполните JavaScript-код</h2>
+    <form method="POST">
+        <textarea name="code" rows="5" cols="50"></textarea><br>
+        <input type="submit" value="Выполнить">
+    </form>
+    {% if result %}
+    <h3>Результат:</h3>
+    <pre>{{ result | e }}</pre>  <!-- Безопасный вывод -->
+    {% endif %}
+</body>
+</html>
+
