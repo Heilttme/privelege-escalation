@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  flask:
+    build: ./src
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      - FLASK_APP=/opt/ctf_app/app.py
+      - DATABASE_URL=postgresql://ctf_user:ctf_password@db:5432/ctf_db
+    volumes:
+      - ./src:/opt/ctf_app
+    networks:
+      - ctf_network
+
+  ssh:
+    build: ./ssh
+    container_name: ssh_server
+    ports:
+      - "2222:22"
+    networks:
+      - ctf_network
+    privileged: true
+    security_opt:
+      - "no-new-privileges:false"
+      - "apparmor=unconfined"
+    cap_add:
+      - SYS_ADMIN                     
+
+  db:
+    image: postgres:13
+    container_name: ctf_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ctf_user
+      POSTGRES_PASSWORD: ctf_password
+      POSTGRES_DB: ctf_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./src/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - ctf_network
+
+volumes:
+  db_data:
+
+networks:
+  ctf_network:
+
