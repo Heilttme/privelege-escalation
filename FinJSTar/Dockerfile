@@ -36,10 +36,10 @@ RUN touch /var/log/cron.log && \
     chmod 644 /var/log/cron.log && \
     chown root:root /var/log/cron.log
 
-RUN echo "flag{EVIL_J0RDAN}" > /home/webuser/user.txt && \
+RUN echo "practice{EVIL_J0RDAN}" > /home/webuser/user.txt && \
     chmod 444 /home/webuser/user.txt
 
-RUN echo "flag{c4nt_believe_y0u_have_m4de_it_this_f4r}" > /root/root.txt && \
+RUN echo "practice{c4nt_believe_y0u_have_m4de_it_this_f4r}" > /root/root.txt && \
     chmod 444 /root/root.txt
 
 CMD ["bash", "-c", "/setup_cron.sh && exec gosu webuser flask run --host=0.0.0.0 --port=5000"]
