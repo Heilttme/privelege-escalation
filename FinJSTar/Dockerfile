@@ -4,44 +4,43 @@ RUN apt update && apt install -y --no-install-recommends \
     nodejs npm cron gosu tar && \
     rm -rf /var/lib/apt/lists/*
 
-RUN useradd -m user1
+RUN useradd -m webuser
 
 WORKDIR /opt/app
+
 COPY app/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-
 RUN npm install -g safe-eval
 
 COPY app/ .
-
 COPY cron/cronjob /etc/cron.d/tar_job
 COPY cron/setup_cron.sh /setup_cron.sh
-RUN chmod 644 /etc/cron.d/tar_job
-RUN chmod +x /setup_cron.sh
+RUN chmod 0644 /etc/cron.d/tar_job && chmod +x /setup_cron.sh
 
-RUN chmod +x /setup_cron.sh && \
-    mkdir -p /backup /var/logs && \
-    chown user1:user1 /var/logs /backup && \
+RUN mkdir -p /var/logs/backup /backup && \
+    chown webuser:webuser /var/logs /var/logs/backup && \
     mkdir -p /var/run/cron && \
     chown root:root /var/run/cron
 
 RUN echo "Log file 1" > /var/logs/log1.txt && \
     echo "Log file 2" > /var/logs/log2.txt && \
     echo "Log file 3" > /var/logs/log3.txt && \
-    chown user1:user1 /var/logs/log*
+    chown webuser:webuser /var/logs/*
 
-# Инициализация cron (от root)
 RUN crontab /etc/cron.d/tar_job
 
-# Настройка окружения
+RUN echo "Don't forget to check the archived logs, they're being made once every minute." > /opt/app/readme.txt && \
+    chmod 644 /opt/app/readme.txt
+
 RUN touch /var/log/cron.log && \
     chmod 644 /var/log/cron.log && \
     chown root:root /var/log/cron.log
 
-# Флаги
-RUN echo "flag{this_is_user1_flag}" > /home/user1/user.txt && \
-    chmod 444 /home/user1/user.txt
+RUN echo "flag{EVIL_J0RDAN}" > /home/webuser/user.txt && \
+    chmod 444 /home/webuser/user.txt
 
-# Запуск cron от root и Flask от user1
-CMD ["bash", "-c", "/setup_cron.sh && exec gosu user1 flask run --host=0.0.0.0 --port=5000"]
+RUN echo "flag{c4nt_believe_y0u_have_m4de_it_this_f4r}" > /root/root.txt && \
+    chmod 444 /root/root.txt
+
+CMD ["bash", "-c", "/setup_cron.sh && exec gosu webuser flask run --host=0.0.0.0 --port=5000"]
 

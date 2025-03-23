@@ -3,12 +3,10 @@ version: '3.8'
 services:
   web:
     build: .
-    container_name: safe-eval-container
+    container_name: working_man
     restart: always
     cap_add:
-      - SYS_ADMIN  # Разрешаем cron менять UID
-    security_opt:
-      - no-new-privileges:true  # Блокируем повышение привилегий внутри контейнера
+      - SYS_ADMIN
     ports:
       - "5000:5000"
 
