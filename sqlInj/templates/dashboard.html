@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        h1 {
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome {{ user }}!</h1>
+    {% if session.is_admin %}
+        <a href="/admin">Admin Panel</a> |
+    {% endif %}
+    <a href="/logout">Logout</a>
+</body>
+</html>

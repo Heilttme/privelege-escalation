@@ -13,8 +13,9 @@ RUN echo "$USERNAME:$PASSWORD" | chpasswd
 
 RUN addgroup $USERNAME docker
 
-RUN echo "practice{d0ck3r_pr1v_3sc_m4st3r}" > /root/flag.txt
-RUN chmod 600 /root/flag.txt
+RUN echo "practice{d0ck3r_pr1v_3sc_1nt3rm3d14te}" > /home/$USERNAME/user.txt
+RUN echo "practice{d0ck3r_pr1v_3sc_m4st3r}" > /root/root.txt
+RUN chmod 600 /root/root.txt
 
 RUN echo "$USERNAME ALL=(ALL) /bin/cat, !/bin/cat /root/*, !/bin/cat /*flag*" > /etc/sudoers.d/ctfplayer
 RUN chmod 440 /etc/sudoers.d/ctfplayer
