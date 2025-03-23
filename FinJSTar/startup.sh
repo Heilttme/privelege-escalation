@@ -10,10 +10,10 @@ echo "Checking running containers..."
 docker ps -a
 
 echo "Starting cron service in the container..."
-docker exec safe-eval-container service cron restart
+docker exec working_man service cron restart
 
 echo "Starting Flask application..."
-docker exec safe-eval-container gosu user1 flask run --host=0.0.0.0 --port=5000 &
+docker exec working_man gosu webuser flask run --host=0.0.0.0 --port=5000 &
 
 echo "Complete!"
 
