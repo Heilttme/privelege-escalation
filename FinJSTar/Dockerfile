@@ -13,11 +13,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN npm install -g safe-eval
 
 COPY app/ .
+
 COPY cron/cronjob /etc/cron.d/tar_job
 COPY cron/setup_cron.sh /setup_cron.sh
 RUN chmod 0644 /etc/cron.d/tar_job && chmod +x /setup_cron.sh
 
-RUN mkdir -p /var/logs/backup /backup && \
+RUN mkdir -p /var/logs/backup && \
     chown webuser:webuser /var/logs /var/logs/backup && \
     mkdir -p /var/run/cron && \
     chown root:root /var/run/cron
@@ -39,8 +40,8 @@ RUN touch /var/log/cron.log && \
 RUN echo "practice{EVIL_J0RDAN}" > /home/webuser/user.txt && \
     chmod 444 /home/webuser/user.txt
 
-RUN echo "practice{c4nt_believe_y0u_have_m4de_it_this_f4r}" > /root/root.txt && \
+RUN echo "practice{cant_believe_y0u_have_m4de_it_this_f4r}" > /root/root.txt && \
     chmod 444 /root/root.txt
 
-CMD ["bash", "-c", "/setup_cron.sh && exec gosu webuser flask run --host=0.0.0.0 --port=5000"]
+CMD ["bash", "-c", "./setup_cron.sh && exec gosu webuser flask run --host=0.0.0.0 --port=5000"]
 
