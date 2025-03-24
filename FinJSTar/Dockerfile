@@ -15,8 +15,8 @@ RUN npm install -g safe-eval
 COPY app/ .
 
 COPY cron/cronjob /etc/cron.d/tar_job
-COPY cron/setup_cron.sh /setup_cron.sh
-RUN chmod 0644 /etc/cron.d/tar_job && chmod +x /setup_cron.sh
+COPY cron/setup_cron.sh ./setup_cron.sh
+RUN chmod 0644 /etc/cron.d/tar_job && chmod +x ./setup_cron.sh
 
 RUN mkdir -p /var/logs/backup && \
     chown webuser:webuser /var/logs /var/logs/backup && \
